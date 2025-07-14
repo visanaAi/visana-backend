@@ -29,3 +29,9 @@ async def stripe_webhook(request: Request):
         print("✅ Payment succeeded!")
 
     return {"status": "success"}
+from fastapi import Request
+
+@app.post("/stripe-webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    return {"status": "Webhook received!"}
