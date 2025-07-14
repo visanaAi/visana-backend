@@ -4,13 +4,16 @@ import os
 
 app = FastAPI()
 
-# Replace this with your real Stripe secret
-stripe.api_key = "sk_test_your_key_here"
+# TEMP testing route
+@app.get("/")
+def read_root():
+    return {"message": "Visana backend is live!"}
 
-# Stripe webhook secret (optional but recommended for security)
+# Replace with your actual keys
+stripe.api_key = "sk_test_your_key_here"
 STRIPE_WEBHOOK_SECRET = "whsec_..."
 
-@app.post("/webhook")
+@app.post("/stripe-webhook")
 async def stripe_webhook(request: Request):
     payload = await request.body()
     sig_header = request.headers.get('stripe-signature')
@@ -24,14 +27,7 @@ async def stripe_webhook(request: Request):
     except Exception as e:
         return {"error": str(e)}
 
-    # Example: handle successful payment
     if event['type'] == 'payment_intent.succeeded':
         print("✅ Payment succeeded!")
 
     return {"status": "success"}
-from fastapi import Request
-
-@app.post("/stripe-webhook")
-async def stripe_webhook(request: Request):
-    payload = await request.body()
-    return {"status": "Webhook received!"}
